@@ -1,1 +1,1 @@
-This is the official project page of SQA3D
+This is the official project page of HaVeBench
