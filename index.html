@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>HaVeBench</title>
+  <title>SQA3D</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <style>
@@ -12,15 +12,6 @@
     }
     hr {
       background-color: #f1f1f1;
-    }
-    .image-container {
-      width: 100%;
-      margin-top: 1em;
-      text-align: center;
-    }
-    .image-container img {
-      max-width: 100%;
-      height: auto;
     }
     .table th {
       padding: 0.2em 0.2em 0 0.2em;
@@ -54,10 +45,6 @@
     .task {
       padding-bottom: 12px;
     }
-    /* .has-text-centered img {
-      max-width: 100%;
-      height: auto;
-    } */
   </style>
   <script type="importmap">
     {
@@ -75,7 +62,7 @@
     <div class="columns">
       <div id="main-content" class="column is-6 is-offset-3" :class="[content, offset]">
         <h1 class="title has-text-centered" style="margin-bottom: 0.5em">
-          HaVeBench: Evaluating Intrinsic and Extrinsic Hallucinations in Large Video-Language Models
+            SQA3D: Situated Question Answering in 3D Scenes
         </h1>
 
         <!-- <p class="publisher has-text-centered">Conference</p> -->
@@ -83,26 +70,30 @@
         <div class="has-text-centered" style="padding: 0 2em;">
 
           <p class="author">
-            <a href="https://patrick-tssn.github.io/">Yuxuan Wang</a><sup>1</sup> &nbsp;&nbsp;&nbsp;
-            <a href="https://github.com/yellow-binary-tree">Yueqian Wang</a><sup>2</sup> &nbsp;&nbsp;&nbsp;
-            <a href="https://cihangxie.github.io/">Cihang Xie</a><sup>3</sup> &nbsp;&nbsp;&nbsp;
+            <a href="http://web.cs.ucla.edu/~xm">Xiaojian Ma</a><sup>2✶</sup> &nbsp;&nbsp;&nbsp;
+            <a href="https://silongyong.github.io/">Silong Yong</a><sup>1,3✶</sup> &nbsp;&nbsp;&nbsp;
             <a href="https://zilongzheng.github.io/">Zilong Zheng</a><sup>1</sup> &nbsp;&nbsp;&nbsp;
+            <a href="https://liqing-ustc.github.io/">Qing Li</a><sup>1</sup> &nbsp;&nbsp;&nbsp;
+            <a href="https://web.cs.ucla.edu/~yliang/">Yitao Liang</a><sup>1,4</sup> &nbsp;&nbsp;&nbsp;
+            <a href="http://www.stat.ucla.edu/~sczhu/">Song-Chun Zhu</a><sup>1,2,3,4</sup> &nbsp;&nbsp;&nbsp;
+            <a href="https://siyuanhuang.com/">Siyuan Huang</a><sup>1</sup> &nbsp;&nbsp;&nbsp;
           </p>
 
-          <!-- <p style="font-size: 0.9em; padding: 0.5em 0;">✶ indicates equal contribution</p> -->
+          <p style="font-size: 0.9em; padding: 0.5em 0;">✶ indicates equal contribution</p>
 
           <p style="font-size: 1em;">
             <sup>1</sup>Beijing Institute for General Artificial Intelligence (BIGAI)<br>
-            <sup>2</sup>Peking University&nbsp;&nbsp;&nbsp;<sup>3</sup>UC Santa Cruz<br>
+            <sup>2</sup>UCLA<br>
+            <sup>3</sup>Tsinghua University&nbsp;&nbsp;&nbsp;<sup>4</sup>Peking University<br>
           </p>
 
           <div style="margin: 1em 0; font-size: 1.1em;">
-            <p> <a href="https://arxiv.org/abs/xxxx">arXiv</a> &nbsp;| <a href="https://github.com/patrick-tssn/HaVeBench">Code</a> &nbsp;</p>
+            <p> <a href="https://arxiv.org/abs/2210.07474">arXiv</a> &nbsp;| <a href="https://github.com/SilongYong/SQA3D">Code</a> &nbsp;| <a href="https://jeasinema.github.io/file/sqa3d_iclr23_slides.pdf">Slides</a> &nbsp;</p>
           </div>
         </div>
 
         <div class="has-text-centered" style="padding: 0 1em;">
-          <img src="assets/teaser.JPG"/>
+          <img src="https://sqascannetviz.s3.us-west-1.amazonaws.com/sqa3d_website/teaser.JPG"/>
         </div>
 
         <hr>
@@ -110,26 +101,28 @@
         <div class="has-text-centered content-block">
           <h2 class="sub-title">Abstract</h2>
           <p style="text-align:justify; margin-bottom: 1.5em;">
-            Recent advancements in Multimodal Large Language Models have extended their capabilities to video understanding, yet they are often plagued by ``hallucinations,'' where irrelevant or nonsensical content is generated, deviating from the actual video context. This work introduces HaVeBench, the first comprehensive benchmark for hallucination detection in video-language models. HaVeBench categorizes hallucinations into two main types: intrinsic and extrinsic, offering further subcategories for detailed analysis, including object-relation, temporal, semantic detail, extrinsic fact, and extrinsic non-fact hallucinations. Moreover, we adopt an adversarial binary Video-Question-Answering method, where we strategically craft pairs of basic and hallucinated questions, for robust evaluation. By comprehensively evaluating 9 video-language models on HaVeBench, we interestingly reveal that 1) the majority of current models exhibit significant issues with hallucinations; 2) while scaling datasets and parameters improves models' ability to detect basic visual cues and counterfactuals, it provides limited benefit for detecting temporal and extrinsic factual hallucinations; 3)  existing models are more adept at detecting facts than they are at identifying hallucinations. As a byproduct, these analyses further instruct the development of our self-PEP framework, achieving an average 7.89\% improvement in hallucination resistance across multiple model architectures. The complete evaluation suite is included in the supplementary material.
+            We propose a new task to benchmark scene understanding of embodied agents: Situated Question Answering in 3D Scenes (SQA3D). Given a scene context (e.g., 3D scan), SQA3D requires the tested agent to first understand its situation (position, orientation, etc.) in the 3D scene as described by text, then reason about its surrounding environment and answer a question under that situation. Based upon 650 scenes from ScanNet, we provide a dataset centered around 6.8k unique situations, along with 20.4k descriptions and 33.4k diverse reasoning questions for these situations. These questions examine a wide spectrum of reasoning capabilities for an intelligent agent, ranging from spatial relation comprehension to commonsense understanding, navigation, and multi-hop reasoning. SQA3D imposes a significant challenge to current multi-modal especially 3D reasoning models. We evaluate various state-of-the-art approaches and find that the best one only achieves an overall score of <b>47.20%</b>, while amateur human participants can reach <b>90.06%</b>. We believe SQA3D could facilitate future embodied AI research with stronger situation understanding and reasoning capability.
           </p>
         </div>
 
         <hr>
 
-        <div id="results" class="content-block">
-          <h2 class="sub-title has-text-centered">HaVeBench data sample</h2>
-          
-          <div class="image-container">
-            <select id="imageSelector" class="select is-medium" v-model="selectedImage">
-              <option value="assets/teaser.JPG">Teaser</option>
-              <option value="assets/sunburst.png">Sunburst</option>
-              <!-- Add more options for images -->
-            </select>
-            <!-- Use v-bind for src and alt attributes to make them reactive -->
-            <img v-bind:src="selectedImage" v-bind:alt="selectedImageAlt"/>
+        <div class="container">
+          <h1 class="title">Image Selector</h1>
+          <div class="has-text-centered content-block">
+            <h2 class="sub-title">Select an Image</h2>
+            <div class="select is-medium">
+              <select id="imageSelector">
+                <option value="assets/teaser.jpg">Teaser Image</option>
+                <option value="assets/sunburst.png">Sunburst Image</option>
+                <!-- Add more options here if you have more images -->
+              </select>
+            </div>
+            <div style="padding: 1em 0;">
+              <img id="selectedImage" src="assets/teaser.jpg" alt="Selected Image" style="max-width: 100%; height: auto;"/>
+            </div>
           </div>
         </div>
-
         <hr>
 
         <div class="has-text-centered content-block">
@@ -137,12 +130,12 @@
           <p style="text-align:justify">If you find our project useful, please consider citing us:</p>
           <div style="padding-top: 1rem; text-align: left;">
 <pre><code>
-@inproceedings{xxx,
-    title={xxx},
-    author={xxx},
-    booktitle={xxx},
-    year={xxx},
-    url={xxx}
+@inproceedings{ma2022sqa3d,
+    title={SQA3D: Situated Question Answering in 3D Scenes},
+    author={Ma, Xiaojian and Yong, Silong and Zheng, Zilong and Li, Qing and Liang, Yitao and Zhu, Song-Chun and Huang, Siyuan},
+    booktitle={International Conference on Learning Representations},
+    year={2023},
+    url={https://openreview.net/forum?id=IDJx97BC38}
 }
 </code></pre>
           </div>
@@ -155,35 +148,24 @@
       <div class="columns">
         <div class="column" :class="[content, offset]">
           <hr>
-          <p class="has-text-centered" style="font-size: 0.9em;">This website is designed and coded by the authors (thanks <a href="https://sqa3d.github.io/">SQA3D</a> for the template). Send feedback and questions to <a href="https://patrick-tssn.github.io/">Yuxuan Wang</a>.</p>
+          <p class="has-text-centered" style="font-size: 0.9em;">This website is designed and coded by the authors (thanks <a href="https://scenediffuser.github.io/">SceneDiffuser</a> for the template). Send feedback and questions to <a href="https://silongyong.github.io/">Silong Yong</a> and <a href="https://jeasinema.github.io">Xiaojian Ma</a>.</p>
         </div>
       </div>
     </footer>
   </div>
+
+  <script>
+    // JavaScript to update the image display based on selection
+    const imageSelector = document.getElementById('imageSelector');
+    const selectedImage = document.getElementById('selectedImage');
+
+    imageSelector.addEventListener('change', function() {
+      selectedImage.src = this.value;
+      selectedImage.alt = this.options[this.selectedIndex].text;
+    });
+  </script>
+
 </body>
 
-
-<script>
-  const app = {
-    data() {
-      return {
-        selectedImage: 'assets/teaser.JPG',
-      };
-    },
-    computed: {
-      // Compute the alt text based on the selected image
-      selectedImageAlt() {
-        const altTexts = {
-          'assets/teaser.JPG': 'assets/teaser.JPG',
-          'assets/sunburst.png': 'assets/sunburst.png',
-          // Add alt text for additional images
-        };
-        return altTexts[this.selectedImage] || 'Selected Image';
-      }
-    }
-  };
-
-  Vue.createApp(app).mount('#app');
-</script>
 
 </html>
