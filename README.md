@@ -1,1 +1,1 @@
-This is the official project page of HaVeBench
+This is the official project page of VideoHallucer
