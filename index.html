@@ -49,6 +49,9 @@
         width: 100%;
         border-collapse: collapse;
     }
+    table, th, td {
+        border: 1px solid black;
+    }
     th, td {
         border: 1px solid black;
         padding: 5px;
@@ -59,9 +62,12 @@
         font-weight: bold;
         margin-bottom: 10px;
     }
+    .italic {
+        font-style: italic;
+    }
     .up-arrow {
             display: inline-block;
-            transform: rotate(180deg);
+            transform: rotate(360deg);
         }
   </style>
   <script type="importmap">
@@ -104,7 +110,7 @@
           </p>
 
           <div style="margin: 1em 0; font-size: 1.1em;">
-            <p> <a href="https://arxiv.org/abs/xxxx.xxxxx">arXiv (soon)</a> &nbsp;| <a href="https://github.com/patrick-tssn/VideoHallucer">Code (soon)</a> &nbsp; | <a href="https://github.com/patrick-tssn/VideoHallucer">Data (soon)</a> &nbsp;</p>
+            <p> <a href="https://arxiv.org/abs/xxxx.xxxxx">arXiv (soon)</a> &nbsp;| <a href="https://github.com/patrick-tssn/VideoHallucer">Code (soon)</a> &nbsp; | <a href="https://huggingface.co/datasets/ColorfulAI/VideoHallucer">Data (soon)</a> &nbsp;</p>
           </div>
         </div>
 
@@ -117,7 +123,7 @@
         <div class="has-text-centered content-block">
           <h2 class="sub-title">Abstract</h2>
           <p style="text-align:justify; margin-bottom: 1.5em;">
-            Recent advancements in Multimodal Large Language Models (MLLMs) have extended their capabilities to video understanding. Yet, these models are often plagued by "hallucinations", where irrelevant or nonsensical content is generated, deviating from the actual video context. This work introduces VideoHallucer, the first comprehensive benchmark for hallucination detection in large video-language models (LVLMs). VideoHallucer categorizes hallucinations into two main types: intrinsic and extrinsic, offering further subcategories for detailed analysis, including object-relation, temporal, semantic detail, extrinsic factual, and extrinsic non-factual hallucinations. We adopt an adversarial binary VideoQA method for comprehensive evaluation, where pairs of basic and hallucinated questions are crafted strategically. By evaluating eleven LVLMs on VideoHallucer, we reveal that (i) the majority of current models exhibit significant issues with hallucinations; (ii) while scaling datasets and parameters improves models' ability to detect basic visual cues and counterfactuals, it provides limited benefit for detecting extrinsic factual hallucinations; (iii)  existing models are more adept at detecting facts than identifying hallucinations. As a byproduct, these analyses further instruct the development of our self-PEP framework, achieving an average of 5.38\% improvement in hallucination resistance across all model architectures. 
+            Recent advancements in Multimodal Large Language Models (MLLMs) have extended their capabilities to video understanding. Yet, these models are often plagued by "hallucinations", where irrelevant or nonsensical content is generated, deviating from the actual video context. This work introduces VideoHallucer, the first comprehensive benchmark for hallucination detection in large video-language models (LVLMs). VideoHallucer categorizes hallucinations into two main types: intrinsic and extrinsic, offering further subcategories for detailed analysis, including object-relation, temporal, semantic detail, extrinsic factual, and extrinsic non-factual hallucinations. We adopt an adversarial binary VideoQA method for comprehensive evaluation, where pairs of basic and hallucinated questions are crafted strategically. By evaluating eleven LVLMs on VideoHallucer, we reveal that (i) the majority of current models exhibit significant issues with hallucinations; (ii) while scaling datasets and parameters improves models' ability to detect basic visual cues and counterfactuals, it provides limited benefit for detecting extrinsic factual hallucinations; (iii)  existing models are more adept at detecting facts than identifying hallucinations. As a byproduct, these analyses further instruct the development of our self-PEP framework, achieving an average of 5.38% improvement in hallucination resistance across all model architectures. 
           </p>
         </div>
 
@@ -127,16 +133,189 @@
         <div id="radar-chart">
           <div class="has-text-centered content-block">
             <h2 class="sub-title">Leaderboard</h2>
-            <p style="text-align:justify; margin-bottom: 1.5em;">
-              You can zoom in/out the radar chart for details
-            </p>
+            
+            
+            <table>
+              <!-- <caption>Performance comparison of existing LVLMs on <span class="italic">bench</span> with additional Yes/No bias analysis.</caption> -->
+              <thead>
+                  <tr>
+                      <th colspan="2"></th>
+                      <th colspan="2"><strong>Yes/No Bias</strong></th>
+                      <th colspan="3"><strong>Accuracy on <span class="italic">bench</span></strong></th>
+                  </tr>
+                  <tr>
+                      <th><strong>Models</strong></th>
+                      <th><strong>Language Model</strong></th>
+                      <th>Pct. Diff (&sim; 0)</th>
+                      <th>FP Ratio (&sim;0.5)</th>
+                      <th>Basic <span class="up-arrow">&uarr;</span></th>
+                      <th>Hallucinated <span class="up-arrow">&uarr;</span></th>
+                      <th>Overall <span class="up-arrow">&uarr;</span></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>VideoChatGPT</td>
+                      <td>LLaMA-7B</td>
+                      <td>0.40</td>
+                      <td>0.89</td>
+                      <td>92.8</td>
+                      <td>10.4</td>
+                      <td>6.4</td>
+                  </tr>
+                  <tr>
+                      <td>Valley2</td>
+                      <td>LLaMA2-7B</td>
+                      <td>-0.07</td>
+                      <td>0.29</td>
+                      <td>44.4</td>
+                      <td>11.5</td>
+                      <td>2.8</td>
+                  </tr>
+                  <tr>
+                      <td>Video-LLaMA2</td>
+                      <td>LLaMA2-7B</td>
+                      <td>0.36</td>
+                      <td>0.84</td>
+                      <td>90.9</td>
+                      <td>12.7</td>
+                      <td>10</td>
+                  </tr>
+                  <tr>
+                      <td>VideoChat2</td>
+                      <td>Vicuna-7B-v0</td>
+                      <td>-0.24</td>
+                      <td>0.15</td>
+                      <td>29.7</td>
+                      <td>25.8</td>
+                      <td>7.8</td>
+                  </tr>
+                  <tr>
+                      <td>VideoLLaVA</td>
+                      <td>Vicuna-7B-v1.5</td>
+                      <td>0.36</td>
+                      <td>0.91</td>
+                      <td><strong>95.1</strong></td>
+                      <td>20.3</td>
+                      <td>17.8</td>
+                  </tr>
+                  <tr>
+                      <td>LLaMA-VID</td>
+                      <td>Vicuna-7B-v1.5</td>
+                      <td>0.29</td>
+                      <td>0.83</td>
+                      <td>89.9</td>
+                      <td>26.6</td>
+                      <td>21</td>
+                  </tr>
+                  <tr>
+                      <td>VideoLaVIT</td>
+                      <td>LLaMA2-7B</td>
+                      <td>0.36</td>
+                      <td>0.91</td>
+                      <td><strong>94.9</strong></td>
+                      <td>21.3</td>
+                      <td>18.9</td>
+                  </tr>
+                  <tr>
+                      <td>MiniGPT4-Video</td>
+                      <td>Mistral-7B</td>
+                      <td>0.18</td>
+                      <td>0.62</td>
+                      <td>79.4</td>
+                      <td>28.6</td>
+                      <td>22.3</td>
+                  </tr>
+                  <tr>
+                      <td>PLLaVA</td>
+                      <td>Vicuna-7B-1.5</td>
+                      <td><strong>0.06</strong></td>
+                      <td><strong>0.53</strong></td>
+                      <td>75.1</td>
+                      <td><strong>55.5</strong></td>
+                      <td>38.1</td>
+                  </tr>
+                  <tr>
+                      <td>LLaVA-NeXT-Video</td>
+                      <td>Vicuna-7B-1.5</td>
+                      <td><strong>-0.04</strong></td>
+                      <td>0.40</td>
+                      <td>62.5</td>
+                      <td><strong>60.9</strong></td>
+                      <td>32.0</td>
+                  </tr>
+                  <tr>
+                      <td>Video-LLaMA2-13B</td>
+                      <td>LLaMA2-13B</td>
+                      <td>0.36</td>
+                      <td>0.79</td>
+                      <td>88.3</td>
+                      <td>3.8</td>
+                      <td>3.3</td>
+                  </tr>
+                  <tr>
+                      <td>LLaMA-VID-13B</td>
+                      <td>Vicuna-13B-v1.5</td>
+                      <td>0.21</td>
+                      <td>0.72</td>
+                      <td>85.2</td>
+                      <td>36.9</td>
+                      <td>29.2</td>
+                  </tr>
+                  <tr>
+                      <td>PLLaVA-13B</td>
+                      <td>Vicuna-13B-1.5</td>
+                      <td>0.17</td>
+                      <td>0.72</td>
+                      <td>87.5</td>
+                      <td>48.6</td>
+                      <td><strong>41.2</strong></td>
+                  </tr>
+                  <tr>
+                      <td>PLLaVA-34B</td>
+                      <td>Yi-34B</td>
+                      <td>0.18</td>
+                      <td>0.78</td>
+                      <td>90.8</td>
+                      <td>50.8</td>
+                      <td><strong>45</strong></td>
+                  </tr>
+                  <tr>
+                      <td>LLaVA-NeXT-Video-34B</td>
+                      <td>Yi-34B</td>
+                      <td>0.07</td>
+                      <td><strong>0.55</strong></td>
+                      <td>73.6</td>
+                      <td>51.6</td>
+                      <td>32.3</td>
+                  </tr>
+                  <tr>
+                      <td>Gemini-1.5-Pro</td>
+                      <td>-</td>
+                      <td>0.15</td>
+                      <td>0.62</td>
+                      <td>83.6</td>
+                      <td>42.3</td>
+                      <td>37.8</td>
+                  </tr>
+                  <tr>
+                      <td>Human</td>
+                      <td>-</td>
+                      <td>0.02</td>
+                      <td>0.42</td>
+                      <td>90</td>
+                      <td>88.8</td>
+                      <td>85</td>
+                  </tr>
+              </tbody>
+          </table>
+      
+
+            
           </div>
           
-          <!-- This is where the radar chart will go -->
-          <div>                            <div id="891b85ff-fcd1-437b-b795-ecea5282c805" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("891b85ff-fcd1-437b-b795-ecea5282c805")) {                    Plotly.newPlot(                        "891b85ff-fcd1-437b-b795-ecea5282c805",                        [{"fillcolor":"rgba(160,82,45,0.1)","line":{"color":"rgba(160,82,45,1)"},"name":"VideoChatGPT","r":[6,0,2,7,17,6],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(216,191,216,0.1)","line":{"color":"rgba(216,191,216,1)"},"name":"Valley2","r":[4.5,3,2.5,0.5,3.5,4.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(245,222,179,0.1)","line":{"color":"rgba(245,222,179,1)"},"name":"Video-LLaMA-2","r":[18,7.5,1,6.5,17,18],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(210,180,140,0.1)","line":{"color":"rgba(210,180,140,1)"},"name":"VideoChat2","r":[10.5,7.5,9,7,5,10.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(255,245,238,0.1)","line":{"color":"rgba(255,245,238,1)"},"name":"VideoLLaVA","r":[34.5,13.5,12,3,26,34.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(154,205,50,0.1)","line":{"color":"rgba(154,205,50,1)"},"name":"LLaMA-VID","r":[43.5,21,17,2.5,21,43.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(70,130,180,0.1)","line":{"color":"rgba(70,130,180,1)"},"name":"VideoLaVIT","r":[35.5,25.5,10.5,4,19,35.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(135,206,235,0.1)","line":{"color":"rgba(135,206,235,1)"},"name":"MiniGPT4-Video","r":[27.5,18,23.5,12,30.5,27.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(244,164,96,0.1)","line":{"color":"rgba(244,164,96,1)"},"name":"PLLaVA","r":[60,23.5,57,9.5,40.5,60],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(238,130,238,0.1)","line":{"color":"rgba(238,130,238,1)"},"name":"LLaVA-NeXT-Video","r":[51.5,28,38,14,28.5,51.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(64,224,208,0.1)","line":{"color":"rgba(64,224,208,1)"},"name":"Video-LLaMA-2-13B","r":[8.5,0,7.5,0,0.5,8.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(0,255,127,0.1)","line":{"color":"rgba(0,255,127,1)"},"name":"LLaMA-VID-13B","r":[44.5,27,25.5,12.5,36.5,44.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(210,180,140,0.1)","line":{"color":"rgba(210,180,140,1)"},"name":"PLLaVA-13B","r":[57.5,35.5,65,5,43,57.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(106,90,205,0.1)","line":{"color":"rgba(106,90,205,1)"},"name":"PLLaVA-34B","r":[59,47,60,5.5,53.5,59],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(255,255,0,0.1)","line":{"color":"rgba(255,255,0,1)"},"name":"LLaVA-NeXT-Video-34B","r":[50.5,30,40,7,34,50.5],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(46,139,87,0.1)","line":{"color":"rgba(46,139,87,1)"},"name":"Gemini-1.5-pro","r":[52,18.5,53.5,16.5,48.5,52],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"},{"fillcolor":"rgba(255,99,71,0.1)","line":{"color":"rgba(255,99,71,1)"},"name":"Human","r":[90,80,95,70,90,90],"theta":["Object-relation\u003cbr\u003e  Hallucination","Temporal\u003cbr\u003eHallucination","Semantic Detail\u003cbr\u003eHallucination","External Factual\u003cbr\u003eHallucination","External Non-factual\u003cbr\u003eHallucination","Object-relation\u003cbr\u003e  Hallucination"],"type":"scatterpolar"}],                        {"legend":{"orientation":"h","x":0.5,"xanchor":"center","y":-0.8,"yanchor":"bottom"},"polar":{"radialaxis":{"range":[0,100],"visible":true}},"showlegend":true,"template":{"data":{"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}}},                        {"responsive": true}                    )                };                            </script>        </div>
-
-
-
+          
+          <div>                            <div id="fe87cab9-5432-4479-b9cc-4db682e739cd" class="plotly-graph-div" style="height:800px; width:1000px;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("fe87cab9-5432-4479-b9cc-4db682e739cd")) {                    Plotly.newPlot(                        "fe87cab9-5432-4479-b9cc-4db682e739cd",                        [{"fillcolor":"rgba(160,82,45,0.1)","line":{"color":"rgba(160,82,45,1)"},"name":"VideoChatGPT","r":[6,0,2,7,17,6],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(216,191,216,0.1)","line":{"color":"rgba(216,191,216,1)"},"name":"Valley2","r":[4.5,3,2.5,0.5,3.5,4.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(245,222,179,0.1)","line":{"color":"rgba(245,222,179,1)"},"name":"Video-LLaMA-2","r":[18,7.5,1,6.5,17,18],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(210,180,140,0.1)","line":{"color":"rgba(210,180,140,1)"},"name":"VideoChat2","r":[10.5,7.5,9,7,5,10.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(255,245,238,0.1)","line":{"color":"rgba(255,245,238,1)"},"name":"VideoLLaVA","r":[34.5,13.5,12,3,26,34.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(154,205,50,0.1)","line":{"color":"rgba(154,205,50,1)"},"name":"LLaMA-VID","r":[43.5,21,17,2.5,21,43.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(70,130,180,0.1)","line":{"color":"rgba(70,130,180,1)"},"name":"VideoLaVIT","r":[35.5,25.5,10.5,4,19,35.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(135,206,235,0.1)","line":{"color":"rgba(135,206,235,1)"},"name":"MiniGPT4-Video","r":[27.5,18,23.5,12,30.5,27.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(244,164,96,0.1)","line":{"color":"rgba(244,164,96,1)"},"name":"PLLaVA","r":[60,23.5,57,9.5,40.5,60],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(238,130,238,0.1)","line":{"color":"rgba(238,130,238,1)"},"name":"LLaVA-NeXT-Video","r":[51.5,28,38,14,28.5,51.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(64,224,208,0.1)","line":{"color":"rgba(64,224,208,1)"},"name":"Video-LLaMA-2-13B","r":[8.5,0,7.5,0,0.5,8.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(0,255,127,0.1)","line":{"color":"rgba(0,255,127,1)"},"name":"LLaMA-VID-13B","r":[44.5,27,25.5,12.5,36.5,44.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(210,180,140,0.1)","line":{"color":"rgba(210,180,140,1)"},"name":"PLLaVA-13B","r":[57.5,35.5,65,5,43,57.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(106,90,205,0.1)","line":{"color":"rgba(106,90,205,1)"},"name":"PLLaVA-34B","r":[59,47,60,5.5,53.5,59],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(255,255,0,0.1)","line":{"color":"rgba(255,255,0,1)"},"name":"LLaVA-NeXT-Video-34B","r":[50.5,30,40,7,34,50.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(46,139,87,0.1)","line":{"color":"rgba(46,139,87,1)"},"name":"Gemini-1.5-pro","r":[52,18.5,53.5,16.5,48.5,52],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fillcolor":"rgba(255,99,71,0.1)","line":{"color":"rgba(255,99,71,1)"},"name":"Human","r":[90,80,95,70,90,90],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"}],                        {"height":800,"legend":{"font":{"size":10},"itemclick":"toggleothers","itemdoubleclick":"toggle","orientation":"h","traceorder":"normal","x":0.5,"xanchor":"center","y":-0.1,"yanchor":"bottom"},"polar":{"radialaxis":{"range":[0,100],"visible":true}},"showlegend":true,"template":{"data":{"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}},"width":1000},                        {"responsive": true}                    )                };                            </script>        </div>
 
 
 
@@ -145,6 +324,262 @@
       </div>
 
         <hr>
+
+        
+        <div class="has-text-centered content-block">
+          <h2 class="sub-title">Self-PEP</h2>
+            <div class="has-text-centered" style="padding: 0 1em;">
+              <p style="text-align:justify; margin-bottom: 1.5em;">
+                Self-improvement with Predict-Explain-Predict
+              </p>
+              <img src="assets/videohallucer_pep.png"/>
+            </div>
+            
+            <table border="1" style="width: 100%; text-align: center;">
+              <!-- <caption><strong>Results of Self-PEP Framework</strong></caption> -->
+              <thead>
+                  <tr>
+                      <th><strong>Models</strong></th>
+                      <th><strong>Object-Relation</strong></th>
+                      <th><strong>Temporal</strong></th>
+                      <th><strong>Semantic Detail</strong></th>
+                      <th><strong>Factual</strong></th>
+                      <th><strong>Non-factual</strong></th>
+                      <th><strong>Overall Accuracy</strong></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <!-- VideoChatGPT Rows -->
+                  <tr>
+                      <td>VideoChatGPT</td>
+                      <td>6</td>
+                      <td>0</td>
+                      <td>2</td>
+                      <td>7</td>
+                      <td>17</td>
+                      <td>6.4</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td>33.5<span style="font-size: smaller;">+27.5</span></td>
+                      <td>4.5<span style="font-size: smaller;">+4.5</span></td>
+                      <td>22.5<span style="font-size: smaller;">+20.5</span></td>
+                      <td>14<span style="font-size: smaller;">+7</span></td>
+                      <td>30<span style="font-size: smaller;">+13.0</span></td>
+                      <td>20.9<span style="font-size: smaller;">+14.5</span></td>
+                  </tr>
+          
+                  <!-- Valley2 Rows -->
+                  <tr>
+                      <td>Valley2</td>
+                      <td>4.5</td>
+                      <td>3</td>
+                      <td>2.5</td>
+                      <td>0.5</td>
+                      <td>3.5</td>
+                      <td>2.8</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td>10<span style="font-size: smaller;">+5.5</span></td>
+                      <td>5.5<span style="font-size: smaller;">+2.5</span></td>
+                      <td>1.5<span style="font-size: smaller;">-1</span></td>
+                      <td>1.5<span style="font-size: smaller;">+1</span></td>
+                      <td>4.5<span style="font-size: smaller;">+1</span></td>
+                      <td>4.6<span style="font-size: smaller;">+1.8</span></td>
+                  </tr>
+          
+                  <!-- Video-LLaMA-2 Rows -->
+                  <tr>
+                      <td>Video-LLaMA-2</td>
+                      <td>18</td>
+                      <td>7.5</td>
+                      <td>1</td>
+                      <td>6.5</td>
+                      <td>17</td>
+                      <td>10</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td>12<span style="font-size: smaller;">-6</span></td>
+                      <td>5.5<span style="font-size: smaller;">-2</span></td>
+                      <td>8<span style="font-size: smaller;">+7</span></td>
+                      <td>15.5<span style="font-size: smaller;">+9</span></td>
+                      <td>26<span style="font-size: smaller;">+9</span></td>
+                      <td>13.4<span style="font-size: smaller;">+3.4</span></td>
+                  </tr>
+          
+                  <!-- VideoChat2 Rows -->
+                  <tr>
+                      <td>VideoChat2</td>
+                      <td>10.5</td>
+                      <td>7.5</td>
+                      <td>9</td>
+                      <td>7</td>
+                      <td>5</td>
+                      <td>7.8</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td>34<span style="font-size: smaller;">+23.5</span></td>
+                      <td>15<span style="font-size: smaller;">+7.5</span></td>
+                      <td>27.5<span style="font-size: smaller;">+18.5</span></td>
+                      <td>19.5<span style="font-size: smaller;">+12.5</span></td>
+                      <td>21.5<span style="font-size: smaller;">+16.5</span></td>
+                      <td>23.5<span style="font-size: smaller;">+15.7</span></td>
+                  </tr>
+          
+                  <!-- VideoLLaVA Rows -->
+                  <tr>
+                      <td>VideoLLaVA</td>
+                      <td>34.5</td>
+                      <td>13.5</td>
+                      <td>12</td>
+                      <td>3</td>
+                      <td>26</td>
+                      <td>17.8</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td>52<span style="font-size: smaller;">+17.5</span></td>
+                      <td>5.5<span style="font-size: smaller;">-8</span></td>
+                      <td>36<span style="font-size: smaller;">+24</span></td>
+                      <td>11<span style="font-size: smaller;">+8</span></td>
+                      <td>34<span style="font-size: smaller;">+8</span></td>
+                      <td>27.7<span style="font-size: smaller;">+10</span></td>
+                  </tr>
+          
+                  <!-- LLaMA-VID Rows -->
+                  <tr>
+                      <td>LLaMA-VID</td>
+                      <td>43.5</td>
+                      <td>21</td>
+                      <td>17</td>
+                      <td>2.5</td>
+                      <td>21</td>
+                      <td>21</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td>44.5<span style="font-size: smaller;">+1</span></td>
+                      <td>14<span style="font-size: smaller;">-7</span></td>
+                      <td>36.5<span style="font-size: smaller;">+19.5</span></td>
+                      <td>22<span style="font-size: smaller;">+19.5</span></td>
+                      <td>33<span style="font-size: smaller;">+12</span></td>
+                      <td>30<span style="font-size: smaller;">+9</span></td>
+                  </tr>
+          
+                  <!-- VideoLaVIT Rows -->
+                  <tr>
+                      <td>VideoLaVIT</td>
+                      <td>35.5</td>
+                      <td>25.5</td>
+                      <td>10.5</td>
+                      <td>4</td>
+                      <td>19</td>
+                      <td>18.9</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td>24<span style="font-size: smaller;">-11.5</span></td>
+                      <td>0.5<span style="font-size: smaller;">-25</span></td>
+                      <td>22<span style="font-size: smaller;">+11.5</span></td>
+                      <td>6<span style="font-size: smaller;">+1</span></td>
+                      <td>13<span style="font-size: smaller;">-6</span></td>
+                      <td>13<span style="font-size: smaller;">-6</span></td>
+                  </tr>
+          
+                  <!-- MiniGPT4-Video Rows -->
+                  <tr>
+                      <td>MiniGPT4-Video</td>
+                      <td>27.5</td>
+                      <td>18</td>
+                      <td>23.5</td>
+                      <td>12</td>
+                      <td>30.5</td>
+                      <td>22.3</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td>47<span style="font-size: smaller;">+19.5</span></td>
+                      <td>21.5<span style="font-size: smaller;">+3.5</span></td>
+                      <td>34.5<span style="font-size: smaller;">+11</span></td>
+                      <td>14<span style="font-size: smaller;">+2</span></td>
+                      <td>35.5<span style="font-size: smaller;">+5</span></td>
+                      <td>30.5<span style="font-size: smaller;">+8.2</span></td>
+                  </tr>
+          
+                  <!-- PLLaVA Rows -->
+                  <tr>
+                      <td>PLLaVA</td>
+                      <td>60</td>
+                      <td>23.5</td>
+                      <td>57</td>
+                      <td>9.5</td>
+                      <td>40.5</td>
+                      <td>38.1</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td>52<span style="font-size: smaller;">-8</span></td>
+                      <td>7<span style="font-size: smaller;">-15.5</span></td>
+                      <td>46.5<span style="font-size: smaller;">-10.5</span></td>
+                      <td>16.5<span style="font-size: smaller;">+7</span></td>
+                      <td>36.5<span style="font-size: smaller;">-1</span></td>
+                      <td>31.7<span style="font-size: smaller;">-5.6</span></td>
+                  </tr>
+          
+                  <!-- LLaVA-NeXT-Video Rows -->
+                  <tr>
+                      <td>LLaVA-NeXT-Video</td>
+                      <td>51.5</td>
+                      <td>28</td>
+                      <td>38</td>
+                      <td>14</td>
+                      <td>28.5</td>
+                      <td>32</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td>51<span style="font-size: smaller;">-0.5</span></td>
+                      <td>15<span style="font-size: smaller;">-13</span></td>
+                      <td>37.5<span style="font-size: smaller;">-0.5</span></td>
+                      <td>11<span style="font-size: smaller;">-3</span></td>
+                      <td>16<span style="font-size: smaller;">-12.5</span></td>
+                      <td>26.1<span style="font-size: smaller;">-5.9</span></td>
+                  </tr>
+          
+                  <!-- Gemini-1.5-Pro Rows -->
+                  <tr>
+                      <td>Gemini-1.5-Pro</td>
+                      <td>52</td>
+                      <td>18.5</td>
+                      <td>53.5</td>
+                      <td>16.5</td>
+                      <td>48.5</td>
+                      <td>37.8</td>
+                  </tr>
+                  <tr style="background-color: lightgray;">
+                      <td>+Self-PEP</td>
+                      <td><strong>56</strong><span style="font-size: smaller;">+4</span></td>
+                      <td><strong>44</strong><span style="font-size: smaller;">+25.5</span></td>
+                      <td><strong>64</strong><span style="font-size: smaller;">+10.5</span></td>
+                      <td><strong>33</strong><span style="font-size: smaller;">+16.5</span></td>
+                      <td><strong>63</strong><span style="font-size: smaller;">+14.5</span></td>
+                      <td><strong>52</strong><span style="font-size: smaller;">+14.2</span></td>
+                  </tr>
+              </tbody>
+          </table>
+          
+          
+
+            
+          </p>
+        </div>
+
+  
+        <hr>
+
 
         <div class="container">
           <!-- <h1 class="title">Image Selector</h1> -->
@@ -176,6 +611,8 @@
           </div>
         </div>
         <hr>
+
+       
 
         <div class="has-text-centered content-block">
           <h2 class="sub-title">Bibtex</h2>
