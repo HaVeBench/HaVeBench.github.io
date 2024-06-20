@@ -13,21 +13,11 @@ body {
     margin-bottom: 5px;
 }
 
-@font-face {
-  font-family: 'CustomFont';
-  src: url('../Gilroy Bold Italic.otf') format('truetype');
-}
-
-.mathvista_other {
+.mathvista {
   font-variant: small-caps;
   font-weight: bold;
 }
 
-.mathvista {
-  /* font-variant: small-caps; */
-  font-family: 'CustomFont', sans-serif;
-  font-size: 80px;
-}
 
 .teaser .hero-body {
   padding-top: 0;

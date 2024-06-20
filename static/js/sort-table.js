@@ -67,7 +67,7 @@ function sortTable(Table, col, dir) {
     if (null != sortClass) {
         sortTable.sortFunc = sortClass[0].replace(/js-sort-/, '');
     } else {
-        sortTable.sortFunc = 'stringOrNumber';
+        sortTable.sortFunc = 'string';
     }
     // Set the headers for the active column to have the decorative class
     Table.querySelectorAll('.js-sort-active').forEach(function(Node) {
@@ -110,12 +110,6 @@ sortTable.compareRow = function(RowA, RowB) {
     }
     valA = sortTable[sortTable.sortFunc](RowA.cells[sortTable.sortCol]);
     valB = sortTable[sortTable.sortFunc](RowB.cells[sortTable.sortCol]);
-
-    // If both values are numbers, compare numerically
-    if (!isNaN(valA) && !isNaN(valB)) {
-        valA = parseFloat(valA);
-        valB = parseFloat(valB);
-    }
 
     return valA == valB ? 0 : sortTable.sortDir * (valA > valB ? 1 : -1);
 };
@@ -282,9 +276,6 @@ sortTable.init = function() {
                     continue;
                 }
                 // Define which column the header should invoke sorting for
-                if (THead.rows[rowNum].cells[cellNum].getAttribute('data-js-sort-colNum')) {
-                    colNum = parseInt(THead.rows[rowNum].cells[cellNum].getAttribute('data-js-sort-colNum'));
-                }
                 THead.rows[rowNum].cells[cellNum].setAttribute('data-js-sort-colNum', colNum);
                 Handler = sortTable.getClickHandler(Tables[i], colNum);
                 window.addEventListener

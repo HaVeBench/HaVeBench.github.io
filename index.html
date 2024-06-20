@@ -1,17 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
   <meta charset="utf-8">
-  <title>VideoHallucer</title>
-  <link rel="icon" href="./assets/icons/profile.png">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
+  <meta name="description"
+        content="Evaluating Intrinsic and Extrinsic Hallucinations in Large Video-Language Models">
+  <meta name="keywords" content="VideoHallucer, Video Hallucer">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <title> VideoHallucer: Evaluating Intrinsic and Extrinsic Hallucinations in Large Video-Language Models</title>
 
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script> -->
+  <!-- <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+/Users/panlu/Library/Mobile Documents/com~apple~CloudDocs/ImageMath/visual-mathqa-server/data_final/images
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script> -->
+
+  <link rel="icon" href="./assets/icons/profile.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
   <link rel="stylesheet" href="./static/css/leaderboard.css">
+
+  <!-- <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator_bulma.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script> -->
   <script type="text/javascript" src="static/js/sort-table.js" defer></script>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -22,181 +46,420 @@
   <script src="./static/js/question_card.js"></script>
 
   <script src="./static/js/leaderboard_testmini.js"></script>  
+  <script src="./data/results/output_folders.js" defer></script>
+  <script src="./data/results/model_scores.js" defer></script>
+
+  <script src="./visualizer/data/data_public.js" defer></script>
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
   <style>
-    body {
-      background-color: #fafafa;
+    .center-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    hr {
-      background-color: #f1f1f1;
-    }
-    /* .table th {
-      padding: 0.2em 0.2em 0 0.2em;
-      width: 50%;
-    }
-    .table td {
-      padding: 0.25em;
-      width: 50%;
-    } */
-    .content-block {
-      padding: 0 6px;
-    }
-    .title {
-      font-size: 32px;
-      padding-top: 32px;
-    }
-    .publisher {
-      margin-bottom: 1rem;
-    }
-    .sub-title {
-      font-size: 26px;
-      padding-bottom: 16px;
-    }
-    .subsub-title {
-      font-size: 20px;
-      padding-bottom: 8px;
-    }
-    .author {
-      font-size: 16px;
-    }
-    .task {
-      padding-bottom: 12px;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    table, th, td {
-        border: 1px solid black;
-    }
-    th, td {
-        border: 1px solid black;
-        padding: 5px;
-        text-align: center;
-    }
-    caption {
-        caption-side: top;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    .italic {
-        font-style: italic;
-    }
-    .up-arrow {
-            display: inline-block;
-            transform: rotate(360deg);
-        }
   </style>
-  <script type="importmap">
-    {
-      "imports": {
-        "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
-        "three": "https://unpkg.com/three@0.127.0/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@0.127.0/examples/jsm/"
-      }
-    }
-  </script>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 </head>
-
 <body>
-  <div id="app">
-    <div class="columns">
-      <div id="main-content" class="column is-6 is-offset-3" :class="[content, offset]">
-        <h1 class="title has-text-centered" style="margin-bottom: 0.5em">
-          <!-- <img src="assets/icons/profile.png" alt="Profile" style="vertical-align: middle; margin-right: 5px; width: 30px; height: 30px;"> -->
-          VideoHallucer: Evaluating Intrinsic and Extrinsic Hallucinations in Large Video-Language Models
-        </h1>
 
-        <!-- <p class="publisher has-text-centered">Conference</p> -->
 
-        <div class="has-text-centered" style="padding: 0 2em;">
 
-          <p class="author">
-            <a href="https://patrick-tssn.github.io/">Yuxuan Wang</a><sup>1</sup> &nbsp;&nbsp;&nbsp;
-            <a href="https://yellow-binary-tree.github.io/">Yueqian Wang</a><sup>2</sup> &nbsp;&nbsp;&nbsp;
-            <a href="https://www.icst.pku.edu.cn/zhaodongyan/en/">Dongyan Zhao</a><sup>2</sup> &nbsp;&nbsp;&nbsp;
-            <a href="https://cihangxie.github.io/">Cihang Xie</a><sup>3</sup> &nbsp;&nbsp;&nbsp;
-            <a href="https://zilongzheng.github.io/">Zilong Zheng</a><sup>1</sup> &nbsp;&nbsp;&nbsp;
-          </p>
 
-          <!-- <p style="font-size: 0.9em; padding: 0.5em 0;">✶ indicates equal contribution</p> -->
-
-          <p style="font-size: 1em;">
-            <sup>1</sup>Beijing Institute for General Artificial Intelligence (BIGAI)<br>
-            <sup>2</sup>Peking University&nbsp;&nbsp;&nbsp;<sup>3</sup>UC, Santa Cruz<br>
-          </p>
-
-          <div style="margin: 1em 0; font-size: 1.1em;">
-            <p> <span class="icon">
-              <i class="ai ai-arxiv"></i>
-          </span> <a href="https://arxiv.org/abs/xxxx.xxxxx">arXiv (soon)</a> &nbsp; 
-          <span class="icon">
-            <i class="fab fa-github"></i>
-          </span> <a href="https://github.com/patrick-tssn/VideoHallucer">Code</a> &nbsp; 
-          <span class="icon">
-            <i class="fas fa-database"></i>
-          </span> <a href="https://huggingface.co/datasets/ColorfulAI/VideoHallucer">Data</a> &nbsp;</p>
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title is-bold">
+            <img src="assets/icons/profile.png" style="width:1em;vertical-align: middle" alt="Logo"/>
+            <span class="mathvista" style="vertical-align: middle">VideoHallucer</span>
+            </h1>
+          <h2 class="subtitle is-3 publication-subtitle">
+            Evaluating Intrinsic and Extrinsic Hallucinations in Large Video-Language Models
+            <!-- <br> -->
+            <!-- with GPT-4V, Bard, and Other Large Multimodal Models -->
+          </h2>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://patrick-tssn.github.io/">Yuxuan Wang</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://yellow-binary-tree.github.io/">Yueqian Wang</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.icst.pku.edu.cn/zhaodongyan/en/">Dongyan Zhao</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://cihangxie.github.io/">Cihang Xie</a><sup>3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://zilongzheng.github.io/">Zilong Zheng</a><sup>1</sup>,
+            </span>
+        
           </div>
 
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Beijing Institute for General Artificial Intelligence,</span><br>
+            <span class="author-block"><sup>2</sup>Peking University,</span>
+            <span class="author-block"><sup>3</sup>UC, Santa Cruz</span><br>
+          </div>
+        
+          <!-- <section> -->
+            <!-- <div class="section" id="org-banners" style="display:fle">
+              <a href="https://www.ucla.edu/" target="_blank" rel="external">
+                  <img class="center-block org-banner" src="static/images/ucla.png" style="height:3em">
+              </a>
+              <a href="https://www.washington.edu/" target="blank" class="ext-link">
+                  <img class="center-block org-banner" src="static/images/uw.png" style="height:3em">
+              </a>
+              <a href="https://www.microsoft.com/en-us/research/" target="_blank" rel="external">
+                  <img class="center-block org-banner" src="static/images/microsoft.png" style="height:3em">
+              </a>
+            </div> -->
+          <!-- </section> -->
+
+          <div class="column has-text-centered">
+            <div style="margin: 1em 0; font-size: 1.1em;">
+              <p> <span class="icon">
+                <i class="ai ai-arxiv"></i>
+            </span> <a href="https://arxiv.org/abs/xxxx.xxxxx">arXiv (soon)</a> &nbsp; 
+            <span class="icon">
+              <i class="fab fa-github"></i>
+            </span> <a href="https://github.com/patrick-tssn/VideoHallucer">Code</a> &nbsp; 
+            <span class="icon">
+              <i class="fas fa-database"></i>
+            </span> <a href="https://huggingface.co/datasets/ColorfulAI/VideoHallucer">Data</a> &nbsp;</p>
+            </div>
+
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <div class="has-text-centered" style="padding: 0 1em;">
-          <img src="assets/videohallucer_teaser.png"/>
-        </div>
 
-        <hr>
 
-        <!-- <div class="has-text-centered content-block"> -->
-          <div class="column is-full has-text-centered content">
-          <h2 class="sub-title">Abstract</h2>
-          <p style="text-align:justify; margin-bottom: 1.5em;">
+
+
+<section class="section">
+  <div class="container" style="margin-bottom: 2vh;">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Introduction</h2>
+        <div class="content has-text-justified">
+          <p>
             Recent advancements in Multimodal Large Language Models (MLLMs) have extended their capabilities to video understanding. Yet, these models are often plagued by "hallucinations", where irrelevant or nonsensical content is generated, deviating from the actual video context. This work introduces VideoHallucer, the first comprehensive benchmark for hallucination detection in large video-language models (LVLMs). VideoHallucer categorizes hallucinations into two main types: intrinsic and extrinsic, offering further subcategories for detailed analysis, including object-relation, temporal, semantic detail, extrinsic factual, and extrinsic non-factual hallucinations. We adopt an adversarial binary VideoQA method for comprehensive evaluation, where pairs of basic and hallucinated questions are crafted strategically. By evaluating eleven LVLMs on VideoHallucer, we reveal that (i) the majority of current models exhibit significant issues with hallucinations; (ii) while scaling datasets and parameters improves models' ability to detect basic visual cues and counterfactuals, it provides limited benefit for detecting extrinsic factual hallucinations; (iii)  existing models are more adept at detecting facts than identifying hallucinations. As a byproduct, these analyses further instruct the development of our self-PEP framework, achieving an average of 5.38% improvement in hallucination resistance across all model architectures. 
+
           </p>
         </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+</div>
+</section>
 
-  
-        <hr>
+<section class="section">
+  <div class="container">
+    
+    <div class="columns is-centered">
+      <div class="column is-full has-text-centered content">
 
-        <div class="container">
-          <!-- <h1 class="title">Image Selector</h1> -->
-          <!-- <div class="has-text-centered content-block"> -->
-            <div class="column is-full has-text-centered content">
-            <h2 class="sub-title">VideoHallucer Data Sample</h2>
-            <div class="select is-medium">
-              <select id="imageSelector">
-                <option value="assets/cases/object.png">Object Halluciantion</option>
-                <option value="assets/cases/relation_spatial.png">Relation Halluciantion (spatial)</option>
-                <option value="assets/cases/relation_action.png">Relation Halluciantion (action)</option>
-                <option value="assets/cases/temporal_abs.png">Temporal Halluciantion (absolute)</option>
-                <option value="assets/cases/temporal_relative.png">Temporal Halluciantion (relative)</option>
-                <option value="assets/cases/semantic_attr.png">Semantic Detail Halluciantion (attibution)</option>
-                <option value="assets/cases/semantic_camera.png">Semantic Detail Halluciantion (camera)</option>
-                <option value="assets/cases/semantic_count.png">Semantic Detail Halluciantion (count)</option>
-                <option value="assets/cases/semantic_event.png">Semantic Detail Halluciantion (event)</option>
-                <option value="assets/cases/semantic_OCR.png">Semantic Detail Halluciantion (OCR)</option>
-                <option value="assets/cases/semantic_scene.png">Semantic Detail Halluciantion (scene)</option>
-                <option value="assets/cases/fact_inst.png">Extrinsic Factual Halluciantion (instruction)</option>
-                <option value="assets/cases/fact_course.png">Extrinsic Factual Halluciantion (course)</option>
-                <option value="assets/cases/nonfact_inst.png">Extrinsic Non-factual Halluciantion (instruction)</option>
-                <option value="assets/cases/nonfact_course.png">Extrinsic Non-factual Halluciantion (course)</option>
-                <!-- Add more options here if you have more images -->
-              </select>
-            </div>
-            <div style="padding: 1em 0;">
-              <img id="selectedImage" src="assets/cases/object.png" alt="Selected Image" style="max-width: 100%; height: auto;"/>
-            </div>
+
+        <h2 class="title is-3" id="leaderboard_test">Leaderboard</h2>
+        <div class="content">
+          <p class="mt-3">Accuracy scores on the VideoHallucer</span>.
+          </p>
+
+          <table class="js-sort-table" id="results" style="margin-left: auto; margin-right: auto;">
+            <thead>
+              <tr>
+                <th rowspan="2" style="vertical-align: middle; width: 50px;"><strong>#</strong></th>
+                <th rowspan="2" style="vertical-align: middle; width: 180px;"><strong>Model</strong></th>
+                <th rowspan="2" style="vertical-align: middle; width: 50px;"><strong>LLM </strong></th>
+                <th rowspan="2" style="vertical-align: middle; width: 50px;"><strong>Frames</strong></th>
+                <th rowspan="2" style="vertical-align: middle; width: 110px;"><strong>Date</strong></th>
+                <th colspan="2" style="vertical-align: middle; width: 300px;"><strong>Yes/No Bias</strong></th>
+                <th colspan="3" style="vertical-align: middle; width: 300px;" data-js-sort-colNum="9"><strong>Accuracy </strong></th>
+                <!-- <th rowspan="2" style="vertical-align: middle; width: 300px;" data-js-sort-colNum="8"><strong>Overall Accuracy </strong></th> -->
+              </tr>
+              <tr>
+                <th><strong>Pct. Diff (&sim; 0)</strong></th>
+                <th><strong>FP Ratio (&sim; 0.5)</strong></th>
+                <th data-js-sort-colNum="7"><strong>Basic</strong></th>
+                <th data-js-sort-colNum="8"><strong>Hallucinated</strong></th>
+                <th data-js-sort-colNum="9"><strong>Overall</strong></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="vertical-align: middle;">1</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class="">Human</b></td>
+                <td style="vertical-align: middle;">-</td>
+                <td style="vertical-align: middle;">-</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.02</td>
+                <td style="vertical-align: middle;">0.42</td>
+                <td style="vertical-align: middle;">90</td>
+                <td style="vertical-align: middle;">88.8</td>
+                <td style="vertical-align: middle;">85</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">2</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://openai.com/index/hello-gpt-4o/" class="ext-link" style="font-size: 16px; margin-left: 5px;">GPT-4o</a></b></td>
+                <td style="vertical-align: middle;">-</td>
+                <td style="vertical-align: middle;">16</td>
+                <td style="vertical-align: middle;">2024-06-18</td>
+                <td style="vertical-align: middle;">-0.02</td>
+                <td style="vertical-align: middle;">0.43</td>
+                <td style="vertical-align: middle;">75.1</td>
+                <td style="vertical-align: middle;">74.2</td>
+                <td style="vertical-align: middle;">53.3</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">3</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/magic-research/PLLaVA" class="ext-link" style="font-size: 16px; margin-left: 5px;">PLLaVA-34B</a></b></td>
+                <td style="vertical-align: middle;">Yi-34B</td>
+                <td style="vertical-align: middle;">16</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.18</td>
+                <td style="vertical-align: middle;">0.78</td>
+                <td style="vertical-align: middle;">90.8</td>
+                <td style="vertical-align: middle;">50.8</td>
+                <td style="vertical-align: middle;">45</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">4</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/magic-research/PLLaVA" class="ext-link" style="font-size: 16px; margin-left: 5px;">PLLaVA-13B</a></b></td>
+                <td style="vertical-align: middle;">Vicuna-13B-1.5</td>
+                <td style="vertical-align: middle;">16</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.17</td>
+                <td style="vertical-align: middle;">0.72</td>
+                <td style="vertical-align: middle;">87.5</td>
+                <td style="vertical-align: middle;">48.6</td>
+                <td style="vertical-align: middle;">41.2</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">5</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/magic-research/PLLaVA" class="ext-link" style="font-size: 16px; margin-left: 5px;">PLLaVA</a></b></td>
+                <td style="vertical-align: middle;">Vicuna-7B-1.5</td>
+                <td style="vertical-align: middle;">16</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.06</td>
+                <td style="vertical-align: middle;">0.53</td>
+                <td style="vertical-align: middle;">75.1</td>
+                <td style="vertical-align: middle;">55.5</td>
+                <td style="vertical-align: middle;">38.1</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">6</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://storage.googleapis.com/deepmind-media/gemini/gemini_v1_5_report.pdf" class="ext-link" style="font-size: 16px; margin-left: 5px;">Gemini 1.5 Pro</a></b></td>
+                <td style="vertical-align: middle;">-</td>
+                <td style="vertical-align: middle;">1 fps (-128)</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.15</td>
+                <td style="vertical-align: middle;">0.62</td>
+                <td style="vertical-align: middle;">83.6</td>
+                <td style="vertical-align: middle;">42.3</td>
+                <td style="vertical-align: middle;">37.8</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">7</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/dvlab-research/LLaMA-VID" class="ext-link" style="font-size: 16px; margin-left: 5px;">LLaMA-VID-13B</a></b></td>
+                <td style="vertical-align: middle;">Vicuna-13B-v1.5</td>
+                <td style="vertical-align: middle;">1 fps</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.21</td>
+                <td style="vertical-align: middle;">0.72</td>
+                <td style="vertical-align: middle;">85.2</td>
+                <td style="vertical-align: middle;">36.9</td>
+                <td style="vertical-align: middle;">29.2</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">8</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://llava-vl.github.io/blog/2024-04-30-llava-next-video/" class="ext-link" style="font-size: 16px; margin-left: 5px;">LLaVA-NeXT-Video-DPO-34B</a></b></td>
+                <td style="vertical-align: middle;">Yi-34B</td>
+                <td style="vertical-align: middle;">4</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.07</td>
+                <td style="vertical-align: middle;">0.55</td>
+                <td style="vertical-align: middle;">73.6</td>
+                <td style="vertical-align: middle;">51.6</td>
+                <td style="vertical-align: middle;">32.3</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">9</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://llava-vl.github.io/blog/2024-04-30-llava-next-video/" class="ext-link" style="font-size: 16px; margin-left: 5px;">LLaVA-NeXT-Video-DPO</a></b></td>
+                <td style="vertical-align: middle;">Vicuna-7B-1.5</td>
+                <td style="vertical-align: middle;">4</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">-0.04</td>
+                <td style="vertical-align: middle;">0.40</td>
+                <td style="vertical-align: middle;">62.5</td>
+                <td style="vertical-align: middle;">60.9</td>
+                <td style="vertical-align: middle;">32.0</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">10</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/Vision-CAIR/MiniGPT4-video" class="ext-link" style="font-size: 16px; margin-left: 5px;">MiniGPT4-Video</a></b></td>
+                <td style="vertical-align: middle;">Mistral-7B</td>
+                <td style="vertical-align: middle;">(-45)</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.18</td>
+                <td style="vertical-align: middle;">0.62</td>
+                <td style="vertical-align: middle;">79.4</td>
+                <td style="vertical-align: middle;">28.6</td>
+                <td style="vertical-align: middle;">22.3</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">11</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/dvlab-research/LLaMA-VID" class="ext-link" style="font-size: 16px; margin-left: 5px;">LLaMA-VID</a></b></td>
+                <td style="vertical-align: middle;">Vicuna-7B-v1.5</td>
+                <td style="vertical-align: middle;">1 fps</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.29</td>
+                <td style="vertical-align: middle;">0.83</td>
+                <td style="vertical-align: middle;">89.9</td>
+                <td style="vertical-align: middle;">26.6</td>
+                <td style="vertical-align: middle;">21</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">12</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/jy0205/LaVIT/tree/main/VideoLaVIT" class="ext-link" style="font-size: 16px; margin-left: 5px;">VideoLaVIT</a></b></td>
+                <td style="vertical-align: middle;">LLaMA2-7B</td>
+                <td style="vertical-align: middle;">16</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.36</td>
+                <td style="vertical-align: middle;">0.91</td>
+                <td style="vertical-align: middle;">94.9</td>
+                <td style="vertical-align: middle;">21.3</td>
+                <td style="vertical-align: middle;">18.9</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">13</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/PKU-YuanGroup/Video-LLaVA" class="ext-link" style="font-size: 16px; margin-left: 5px;">Video-LLaVA</a></b></td>
+                <td style="vertical-align: middle;">Vicuna-7B-v1.5</td>
+                <td style="vertical-align: middle;">8</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.36</td>
+                <td style="vertical-align: middle;">0.91</td>
+                <td style="vertical-align: middle;">95.1</td>
+                <td style="vertical-align: middle;">20.3</td>
+                <td style="vertical-align: middle;">17.8</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">14</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/DAMO-NLP-SG/Video-LLaMA" class="ext-link" style="font-size: 16px; margin-left: 5px;">Video-LLaMA2</a></b></td>
+                <td style="vertical-align: middle;">LLaMA2-7B</td>
+                <td style="vertical-align: middle;">8</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.36</td>
+                <td style="vertical-align: middle;">0.84</td>
+                <td style="vertical-align: middle;">90.9</td>
+                <td style="vertical-align: middle;">12.7</td>
+                <td style="vertical-align: middle;">10</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">15</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/OpenGVLab/Ask-Anything/tree/main/video_chat2" class="ext-link" style="font-size: 16px; margin-left: 5px;">VideoChat2</a></b></td>
+                <td style="vertical-align: middle;">Vicuna-7B-v0</td>
+                <td style="vertical-align: middle;">4</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">-0.24</td>
+                <td style="vertical-align: middle;">0.15</td>
+                <td style="vertical-align: middle;">29.7</td>
+                <td style="vertical-align: middle;">25.8</td>
+                <td style="vertical-align: middle;">7.8</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">16</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/mbzuai-oryx/Video-ChatGPT" class="ext-link" style="font-size: 16px; margin-left: 5px;">VideoChatGPT</a></b></td>
+                <td style="vertical-align: middle;">LLaMA-7B</td>
+                <td style="vertical-align: middle;">100</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.40</td>
+                <td style="vertical-align: middle;">0.89</td>
+                <td style="vertical-align: middle;">92.8</td>
+                <td style="vertical-align: middle;">10.4</td>
+                <td style="vertical-align: middle;">6.4</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">17</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/DAMO-NLP-SG/Video-LLaMA" class="ext-link" style="font-size: 16px; margin-left: 5px;">Video-LLaMA2-13B</a></b></td>
+                <td style="vertical-align: middle;">LLaMA2-13B</td>
+                <td style="vertical-align: middle;">8</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">0.36</td>
+                <td style="vertical-align: middle;">0.79</td>
+                <td style="vertical-align: middle;">88.3</td>
+                <td style="vertical-align: middle;">3.8</td>
+                <td style="vertical-align: middle;">3.3</td>
+
+              </tr>
+              <tr>
+                <td style="vertical-align: middle;">18</td>
+                <td style="text-align: left; padding: 2px 10px;"><b class=""><a href="https://github.com/RupertLuo/Valley" class="ext-link" style="font-size: 16px; margin-left: 5px;">Valley2</a></b></td>
+                <td style="vertical-align: middle;">LLaMA2-7B</td>
+                <td style="vertical-align: middle;">8</td>
+                <td style="vertical-align: middle;">2024-05-25</td>
+                <td style="vertical-align: middle;">-0.07</td>
+                <td style="vertical-align: middle;">0.29</td>
+                <td style="vertical-align: middle;">44.4</td>
+                <td style="vertical-align: middle;">11.5</td>
+                <td style="vertical-align: middle;">2.8</td>
+              </tr>
+            </tbody>
+          </table>
+
+
+          <p class="mt-3">Accuracy scores on the different VideoHallucer settings</span>.
+          </p>
+
+          <div class="center-container">
+
+            <div>                            <div id="9208eaa6-1684-452c-a3cb-1004ce51d55e" class="plotly-graph-div" style="height:600px; width:800px;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("9208eaa6-1684-452c-a3cb-1004ce51d55e")) {                    Plotly.newPlot(                        "9208eaa6-1684-452c-a3cb-1004ce51d55e",                        [{"fill":"toself","fillcolor":"rgba(112,128,144,0.1)","line":{"color":"rgba(112,128,144,1)"},"name":"VideoChatGPT","r":[6,0,2,7,17,6],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(160,82,45,0.1)","line":{"color":"rgba(160,82,45,1)"},"name":"Valley2","r":[4.5,3,2.5,0.5,3.5,4.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(216,191,216,0.1)","line":{"color":"rgba(216,191,216,1)"},"name":"Video-LLaMA-2","r":[18,7.5,1,6.5,17,18],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(245,222,179,0.1)","line":{"color":"rgba(245,222,179,1)"},"name":"VideoChat2","r":[10.5,7.5,9,7,5,10.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(210,180,140,0.1)","line":{"color":"rgba(210,180,140,1)"},"name":"VideoLLaVA","r":[34.5,13.5,12,3,26,34.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(255,245,238,0.1)","line":{"color":"rgba(255,245,238,1)"},"name":"LLaMA-VID","r":[43.5,21,17,2.5,21,43.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(154,205,50,0.1)","line":{"color":"rgba(154,205,50,1)"},"name":"VideoLaVIT","r":[35.5,25.5,10.5,4,19,35.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(70,130,180,0.1)","line":{"color":"rgba(70,130,180,1)"},"name":"MiniGPT4-Video","r":[27.5,18,23.5,12,30.5,27.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(135,206,235,0.1)","line":{"color":"rgba(135,206,235,1)"},"name":"PLLaVA","r":[60,23.5,57,9.5,40.5,60],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(244,164,96,0.1)","line":{"color":"rgba(244,164,96,1)"},"name":"LLaVA-NeXT-Video","r":[51.5,28,38,14,28.5,51.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(238,130,238,0.1)","line":{"color":"rgba(238,130,238,1)"},"name":"Video-LLaMA-2-13B","r":[8.5,0,7.5,0,0.5,8.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(64,224,208,0.1)","line":{"color":"rgba(64,224,208,1)"},"name":"LLaMA-VID-13B","r":[44.5,27,25.5,12.5,36.5,44.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(0,255,127,0.1)","line":{"color":"rgba(0,255,127,1)"},"name":"PLLaVA-13B","r":[57.5,35.5,65,5,43,57.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(210,180,140,0.1)","line":{"color":"rgba(210,180,140,1)"},"name":"PLLaVA-34B","r":[59,47,60,5.5,53.5,59],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(106,90,205,0.1)","line":{"color":"rgba(106,90,205,1)"},"name":"LLaVA-NeXT-Video-34B","r":[50.5,30,40,7,34,50.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(255,255,0,0.1)","line":{"color":"rgba(255,255,0,1)"},"name":"Gemini-1.5-pro","r":[52,18.5,53.5,16.5,48.5,52],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(46,139,87,0.1)","line":{"color":"rgba(46,139,87,1)"},"name":"GPT-4o","r":[66,48.5,55.5,26,70.5,66],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(255,99,71,0.1)","line":{"color":"rgba(255,99,71,1)"},"name":"Human","r":[90,80,95,70,90,90],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"}],                        {"autosize":false,"height":600,"legend":{"orientation":"v","x":1.05,"xanchor":"left","y":0.5,"yanchor":"middle"},"margin":{"b":20,"l":20,"r":20,"t":20},"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)","polar":{"radialaxis":{"range":[0,100],"visible":true}},"showlegend":true,"template":{"data":{"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}},"width":800},                        {"responsive": true}                    )                };                            </script>        </div>
+
+
           </div>
+            
+          
         </div>
 
+      </div>
+    </div>
 
-        <div class="container">
-          <!-- <div class="columns is-centered"> -->
-            <!-- <div class="has-text-centered content-block"> -->
-              <div class="column is-full has-text-centered content">
-      
-            <h2 class="sub-title">Data Statistics</h2>
-            <div class="content">
+  </div>
+</section>
+
+<!-- DATASET SECTION -->
+<section class="hero is-light is-small">
+  <div class="hero-body has-text-centered">
+    <!-- <h1 class="title is-1 mathvista"><img src="static/images/mathvista.png" style="width:1.0em;vertical-align: middle" alt="Logo"/>MathVista Dataset</h1> -->
+  <h1 class="title is-1 mathvista">
+    <img src="assets/icons/profile.png" style="width:1em;vertical-align: middle" alt="Logo"/>
+    <span class="mathvista" style="vertical-align: middle">VideoHallucer Dataset</span>
+  </h1>
+  </div>
+</section>
+
+<!-- <section class="section">
+  <div class="container" style="margin-bottom: 2vh;">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Introduction</h2>
+        <div class="content has-text-justified">
+          <p> -->
+            
+<section class="section">
+  <div class="container">
+
+    <div class="columns is-centered m-6">
+      <div class="column is-full has-text-centered content">
+        <h2 class="title is-3">Statistics</h2>
+          <div class="content">
             <table>
               <thead>
                   <tr>
@@ -249,505 +512,207 @@
               </tbody>
           </table>
         </div>
-
-          </div>
-          
-
-        </div>
-
-        <hr>
-        
-
-        <div class="container">
+      </div>
+    </div>
     
-          <div class="columns is-centered">
-            <div class="column is-full has-text-centered content">
-              <!-- <div class="has-text-centered content-block"> -->
-      
-              <!-- <h2 class="title is-3" id="leaderboard">Leaderboard</h2> -->
-              <h2 class="sub-title">Leaderboard</h2>
-              <div class="content">
-      
-                <table class="js-sort-table" id="results" style="margin-left: auto; margin-right: auto;">
-                  <thead>
-                    <tr>
-                      <th rowspan="2" style="vertical-align: middle; width: 50px;"><strong>#</strong></th>
-                      <th rowspan="2" style="vertical-align: middle; width: 180px;"><strong>Model</strong></th>
-                      <th rowspan="2" style="vertical-align: middle; width: 50px;"><strong>LLM </strong></th>
-                      <th rowspan="2" style="vertical-align: middle; width: 50px;"><strong>Frames</strong></th>
-                      <th rowspan="2" style="vertical-align: middle; width: 110px;"><strong>Date</strong></th>
-                      <th colspan="2" style="vertical-align: middle; width: 300px;"><strong>Yes/No Bias</strong></th>
-                      <th colspan="3" style="vertical-align: middle; width: 300px;" data-js-sort-colNum="9"><strong>Accuracy </strong></th>
-                      <!-- <th rowspan="2" style="vertical-align: middle; width: 300px;" data-js-sort-colNum="8"><strong>Overall Accuracy </strong></th> -->
-                    </tr>
-                    <tr>
-                      <th><strong>Pct. Diff (&sim; 0)</strong></th>
-                      <th><strong>FP Ratio (&sim; 0.5)</strong></th>
-                      <th data-js-sort-colNum="7"><strong>Basic</strong></th>
-                      <th data-js-sort-colNum="8"><strong>Hallucinated</strong></th>
-                      <th data-js-sort-colNum="9"><strong>Overall</strong></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td style="vertical-align: middle;">1</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">Human</b></td>
-                      <td style="vertical-align: middle;">-</td>
-                      <td style="vertical-align: middle;">-</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.02</td>
-                      <td style="vertical-align: middle;">0.42</td>
-                      <td style="vertical-align: middle;">90</td>
-                      <td style="vertical-align: middle;">88.8</td>
-                      <td style="vertical-align: middle;">85</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">2</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">GPT-4o</b></td>
-                      <td style="vertical-align: middle;">-</td>
-                      <td style="vertical-align: middle;">16</td>
-                      <td style="vertical-align: middle;">2024-06-18</td>
-                      <td style="vertical-align: middle;">-0.02</td>
-                      <td style="vertical-align: middle;">0.43</td>
-                      <td style="vertical-align: middle;">75.1</td>
-                      <td style="vertical-align: middle;">74.2</td>
-                      <td style="vertical-align: middle;">53.3</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">3</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">PLLaVA-34B</b></td>
-                      <td style="vertical-align: middle;">Yi-34B</td>
-                      <td style="vertical-align: middle;">16</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.18</td>
-                      <td style="vertical-align: middle;">0.78</td>
-                      <td style="vertical-align: middle;">90.8</td>
-                      <td style="vertical-align: middle;">50.8</td>
-                      <td style="vertical-align: middle;">45</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">4</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">PLLaVA-13B</b></td>
-                      <td style="vertical-align: middle;">Vicuna-13B-1.5</td>
-                      <td style="vertical-align: middle;">16</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.17</td>
-                      <td style="vertical-align: middle;">0.72</td>
-                      <td style="vertical-align: middle;">87.5</td>
-                      <td style="vertical-align: middle;">48.6</td>
-                      <td style="vertical-align: middle;">41.2</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">5</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">PLLaVA</b></td>
-                      <td style="vertical-align: middle;">Vicuna-7B-1.5</td>
-                      <td style="vertical-align: middle;">16</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.06</td>
-                      <td style="vertical-align: middle;">0.53</td>
-                      <td style="vertical-align: middle;">75.1</td>
-                      <td style="vertical-align: middle;">55.5</td>
-                      <td style="vertical-align: middle;">38.1</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">6</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">Gemini-1.5-Pro</b></td>
-                      <td style="vertical-align: middle;">-</td>
-                      <td style="vertical-align: middle;">1 fps (-128)</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.15</td>
-                      <td style="vertical-align: middle;">0.62</td>
-                      <td style="vertical-align: middle;">83.6</td>
-                      <td style="vertical-align: middle;">42.3</td>
-                      <td style="vertical-align: middle;">37.8</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">7</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">LLaMA-VID-13B</b></td>
-                      <td style="vertical-align: middle;">Vicuna-13B-v1.5</td>
-                      <td style="vertical-align: middle;">1 fps</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.21</td>
-                      <td style="vertical-align: middle;">0.72</td>
-                      <td style="vertical-align: middle;">85.2</td>
-                      <td style="vertical-align: middle;">36.9</td>
-                      <td style="vertical-align: middle;">29.2</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">8</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">LLaVA-NeXT-Video-DPO-34B</b></td>
-                      <td style="vertical-align: middle;">Yi-34B</td>
-                      <td style="vertical-align: middle;">4</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.07</td>
-                      <td style="vertical-align: middle;">0.55</td>
-                      <td style="vertical-align: middle;">73.6</td>
-                      <td style="vertical-align: middle;">51.6</td>
-                      <td style="vertical-align: middle;">32.3</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">9</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">LLaVA-NeXT-Video-DPO</b></td>
-                      <td style="vertical-align: middle;">Vicuna-7B-1.5</td>
-                      <td style="vertical-align: middle;">4</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">-0.04</td>
-                      <td style="vertical-align: middle;">0.40</td>
-                      <td style="vertical-align: middle;">62.5</td>
-                      <td style="vertical-align: middle;">60.9</td>
-                      <td style="vertical-align: middle;">32.0</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">10</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">MiniGPT4-Video</b></td>
-                      <td style="vertical-align: middle;">Mistral-7B</td>
-                      <td style="vertical-align: middle;">(-45)</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.18</td>
-                      <td style="vertical-align: middle;">0.62</td>
-                      <td style="vertical-align: middle;">79.4</td>
-                      <td style="vertical-align: middle;">28.6</td>
-                      <td style="vertical-align: middle;">22.3</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">11</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">LLaMA-VID</b></td>
-                      <td style="vertical-align: middle;">Vicuna-7B-v1.5</td>
-                      <td style="vertical-align: middle;">1 fps</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.29</td>
-                      <td style="vertical-align: middle;">0.83</td>
-                      <td style="vertical-align: middle;">89.9</td>
-                      <td style="vertical-align: middle;">26.6</td>
-                      <td style="vertical-align: middle;">21</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">12</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">VideoLaVIT</b></td>
-                      <td style="vertical-align: middle;">LLaMA2-7B</td>
-                      <td style="vertical-align: middle;">16</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.36</td>
-                      <td style="vertical-align: middle;">0.91</td>
-                      <td style="vertical-align: middle;">94.9</td>
-                      <td style="vertical-align: middle;">21.3</td>
-                      <td style="vertical-align: middle;">18.9</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">13</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">VideoLLaVA</b></td>
-                      <td style="vertical-align: middle;">Vicuna-7B-v1.5</td>
-                      <td style="vertical-align: middle;">8</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.36</td>
-                      <td style="vertical-align: middle;">0.91</td>
-                      <td style="vertical-align: middle;">95.1</td>
-                      <td style="vertical-align: middle;">20.3</td>
-                      <td style="vertical-align: middle;">17.8</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">14</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">Video-LLaMA2</b></td>
-                      <td style="vertical-align: middle;">LLaMA2-7B</td>
-                      <td style="vertical-align: middle;">8</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.36</td>
-                      <td style="vertical-align: middle;">0.84</td>
-                      <td style="vertical-align: middle;">90.9</td>
-                      <td style="vertical-align: middle;">12.7</td>
-                      <td style="vertical-align: middle;">10</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">15</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">VideoChat2</b></td>
-                      <td style="vertical-align: middle;">Vicuna-7B-v0</td>
-                      <td style="vertical-align: middle;">4</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">-0.24</td>
-                      <td style="vertical-align: middle;">0.15</td>
-                      <td style="vertical-align: middle;">29.7</td>
-                      <td style="vertical-align: middle;">25.8</td>
-                      <td style="vertical-align: middle;">7.8</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">16</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">VideoChatGPT</b></td>
-                      <td style="vertical-align: middle;">LLaMA-7B</td>
-                      <td style="vertical-align: middle;">100</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.40</td>
-                      <td style="vertical-align: middle;">0.89</td>
-                      <td style="vertical-align: middle;">92.8</td>
-                      <td style="vertical-align: middle;">10.4</td>
-                      <td style="vertical-align: middle;">6.4</td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">17</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">Video-LLaMA2-13B</b></td>
-                      <td style="vertical-align: middle;">LLaMA2-13B</td>
-                      <td style="vertical-align: middle;">8</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">0.36</td>
-                      <td style="vertical-align: middle;">0.79</td>
-                      <td style="vertical-align: middle;">88.3</td>
-                      <td style="vertical-align: middle;">3.8</td>
-                      <td style="vertical-align: middle;">3.3</td>
-  
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">18</td>
-                      <td style="text-align: left; padding: 2px 10px;"><b class="">Valley2</b></td>
-                      <td style="vertical-align: middle;">LLaMA2-7B</td>
-                      <td style="vertical-align: middle;">8</td>
-                      <td style="vertical-align: middle;">2024-05-25</td>
-                      <td style="vertical-align: middle;">-0.07</td>
-                      <td style="vertical-align: middle;">0.29</td>
-                      <td style="vertical-align: middle;">44.4</td>
-                      <td style="vertical-align: middle;">11.5</td>
-                      <td style="vertical-align: middle;">2.8</td>
-                    </tr>
-                  </tbody>
-                </table>
-      
-      
-      
-              </div>
-            <!-- </div> -->
-          </div>
-        </div>
-      
-       <!-- <hr> -->
-       <!-- <div class="has-text-centered content-block"> -->
-        <div class="column is-full has-text-centered content">
-        <h2 class="sub-title">Detailed Results</h2>
-        <div id="radar-chart">
-          
-          
-
-          <p style="text-align:justify; margin-bottom: 1.5em;">
-            Please feel free to adjust the radar figure by zooming in or out and toggling the display settings as needed.
-          </p>
-          
-          <div>                            <div id="9208eaa6-1684-452c-a3cb-1004ce51d55e" class="plotly-graph-div" style="height:600px; width:800px;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("9208eaa6-1684-452c-a3cb-1004ce51d55e")) {                    Plotly.newPlot(                        "9208eaa6-1684-452c-a3cb-1004ce51d55e",                        [{"fill":"toself","fillcolor":"rgba(112,128,144,0.1)","line":{"color":"rgba(112,128,144,1)"},"name":"VideoChatGPT","r":[6,0,2,7,17,6],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(160,82,45,0.1)","line":{"color":"rgba(160,82,45,1)"},"name":"Valley2","r":[4.5,3,2.5,0.5,3.5,4.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(216,191,216,0.1)","line":{"color":"rgba(216,191,216,1)"},"name":"Video-LLaMA-2","r":[18,7.5,1,6.5,17,18],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(245,222,179,0.1)","line":{"color":"rgba(245,222,179,1)"},"name":"VideoChat2","r":[10.5,7.5,9,7,5,10.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(210,180,140,0.1)","line":{"color":"rgba(210,180,140,1)"},"name":"VideoLLaVA","r":[34.5,13.5,12,3,26,34.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(255,245,238,0.1)","line":{"color":"rgba(255,245,238,1)"},"name":"LLaMA-VID","r":[43.5,21,17,2.5,21,43.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(154,205,50,0.1)","line":{"color":"rgba(154,205,50,1)"},"name":"VideoLaVIT","r":[35.5,25.5,10.5,4,19,35.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(70,130,180,0.1)","line":{"color":"rgba(70,130,180,1)"},"name":"MiniGPT4-Video","r":[27.5,18,23.5,12,30.5,27.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(135,206,235,0.1)","line":{"color":"rgba(135,206,235,1)"},"name":"PLLaVA","r":[60,23.5,57,9.5,40.5,60],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(244,164,96,0.1)","line":{"color":"rgba(244,164,96,1)"},"name":"LLaVA-NeXT-Video","r":[51.5,28,38,14,28.5,51.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(238,130,238,0.1)","line":{"color":"rgba(238,130,238,1)"},"name":"Video-LLaMA-2-13B","r":[8.5,0,7.5,0,0.5,8.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(64,224,208,0.1)","line":{"color":"rgba(64,224,208,1)"},"name":"LLaMA-VID-13B","r":[44.5,27,25.5,12.5,36.5,44.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(0,255,127,0.1)","line":{"color":"rgba(0,255,127,1)"},"name":"PLLaVA-13B","r":[57.5,35.5,65,5,43,57.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(210,180,140,0.1)","line":{"color":"rgba(210,180,140,1)"},"name":"PLLaVA-34B","r":[59,47,60,5.5,53.5,59],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(106,90,205,0.1)","line":{"color":"rgba(106,90,205,1)"},"name":"LLaVA-NeXT-Video-34B","r":[50.5,30,40,7,34,50.5],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(255,255,0,0.1)","line":{"color":"rgba(255,255,0,1)"},"name":"Gemini-1.5-pro","r":[52,18.5,53.5,16.5,48.5,52],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(46,139,87,0.1)","line":{"color":"rgba(46,139,87,1)"},"name":"GPT-4o","r":[66,48.5,55.5,26,70.5,66],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"},{"fill":"toself","fillcolor":"rgba(255,99,71,0.1)","line":{"color":"rgba(255,99,71,1)"},"name":"Human","r":[90,80,95,70,90,90],"theta":["ORH","TH","SDH","EFH","ENFH","ORH"],"type":"scatterpolar"}],                        {"autosize":false,"height":600,"legend":{"orientation":"v","x":1.05,"xanchor":"left","y":0.5,"yanchor":"middle"},"margin":{"b":20,"l":20,"r":20,"t":20},"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)","polar":{"radialaxis":{"range":[0,100],"visible":true}},"showlegend":true,"template":{"data":{"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}},"width":800},                        {"responsive": true}                    )                };                            </script>        </div>
-
-
-          <!-- Make sure to unescape the HTML if you're inserting it programmatically -->
-          <!-- {{ radar_div|safe }} -->
-      </div>
-      </div>
-
-        <hr>
-
-
-        
-        
-        <!-- <div class="has-text-centered content-block"> -->
-          <div class="column is-full has-text-centered content">
-          <h2 class="sub-title">Self-PEP</h2>
-            <div class="has-text-centered" style="padding: 0 1em;">
-              
-              <img src="assets/videohallucer_pep.png"/>
+    <div class="columns is-centered m-6">
+      <div class="column is-full has-text-centered content">
+        <h2 class="title is-3">Data Samples</h2>
+        <div id="results-carousel" class="carousel results-carousel">
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/object.png" alt="" width="100%"/>
+              <p>Object Hallucination</p>
             </div>
-            
-            <p style="text-align:justify; margin-bottom: 1.5em;">
-              We propose a new framework to enhance the model's resilience against the tendency to produce hallucinations. The Self-PEP framework operates in two phases: self-improvement and self-explanation. In the self-improvement phase, the model autonomously extracts visual knowledge, while the self-explanation phase involves a three-step process: predict, then explain, and finally refine the prediction using the explanation. Here we get more robust Leaderboard over all 7B level model.
-            </p>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/relation_spatial.png" alt="" width="100%"/>
+              <p>Relation Hallucination (spatial)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/relation_action.png" alt="" width="100%"/>
+              <p>Relation Hallucination (action)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/temporal_abs.png" alt="" width="100%"/>
+              <p>Temporal Hallucination (absolute)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/temporal_relative.png" alt="" width="100%"/>
+              <p>Temporal Hallucination (relative)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/semantic_attr.png" alt="" width="100%"/>
+              <p>Semantic Detail Hallucination (attribution)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/semantic_camera.png" alt="" width="100%"/>
+              <p>Semantic Detail Hallucination (camera)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/semantic_count.png" alt="" width="100%"/>
+              <p>Semantic Detail Hallucination (count)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/semantic_event.png" alt="" width="100%"/>
+              <p>Semantic Detail Hallucination (event)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/semantic_OCR.png" alt="" width="100%"/>
+              <p>Semantic Detail Hallucination (OCR)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/semantic_scene.png" alt="" width="100%"/>
+              <p>Semantic Detail Hallucination (scene)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/fact_inst.png" alt="" width="100%"/>
+              <p>Extrinsic Factual Hallucination (instruction)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/fact_course.png" alt="" width="100%"/>
+              <p>Extrinsic Factual Hallucination (course)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/nonfact_inst.png" alt="" width="100%"/>
+              <p>Extrinsic Non-factual Hallucination (instruction)</p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/cases/nonfact_course.png" alt="" width="100%"/>
+              <p>Extrinsic Non-factual Hallucination (course)</p>
+            </div>
+          </div>
+          
 
-            <table class="js-sort-table" id="results" style="margin-left: auto; margin-right: auto;">
-              <thead>
-                <tr>
-                  <th rowspan="1" style="vertical-align: middle; width: 50px;"><strong>#</strong></th>
-                  <th rowspan="1" style="vertical-align: middle; width: 180px;"><strong>Model</strong></th>
-                  <th rowspan="1" style="vertical-align: middle; width: 110px;"><strong>Date</strong></th>
-                  <th rowspan="1" style="vertical-align: middle; width: 300px;" data-js-sort-colNum="3"><strong>Object-Relation</strong></th>
-                  <th rowspan="1" style="vertical-align: middle; width: 300px;" data-js-sort-colNum="4"><strong>Temporal</strong></th>
-                  <th rowspan="1" style="vertical-align: middle; width: 300px;" data-js-sort-colNum="5"><strong>Semantic Detail</strong></th>
-                  <th rowspan="1" style="vertical-align: middle; width: 300px;" data-js-sort-colNum="6"><strong>Factual</strong></th>
-                  <th rowspan="1" style="vertical-align: middle; width: 300px;" data-js-sort-colNum="7"><strong>Non-factual</strong></th>
-                  <th rowspan="1" style="vertical-align: middle; width: 300px;" data-js-sort-colNum="8"><strong>Overall Accuracy</strong></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="vertical-align: middle;">1</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">Gemini-1.5-Pro</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">56</td>
-                  <td style="vertical-align: middle;">44</td>
-                  <td style="vertical-align: middle;">64</td>
-                  <td style="vertical-align: middle;">33</td>
-                  <td style="vertical-align: middle;">63</td>
-                  <td style="vertical-align: middle;">52</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;">2</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">PLLaVA</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">52</td>
-                  <td style="vertical-align: middle;">7</td>
-                  <td style="vertical-align: middle;">46.5</td>
-                  <td style="vertical-align: middle;">16.5</td>
-                  <td style="vertical-align: middle;">36.5</td>
-                  <td style="vertical-align: middle;">31.7</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;">3</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">MiniGPT4-Video</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">47</td>
-                  <td style="vertical-align: middle;">21.5</td>
-                  <td style="vertical-align: middle;">34.5</td>
-                  <td style="vertical-align: middle;">14</td>
-                  <td style="vertical-align: middle;">35.5</td>
-                  <td style="vertical-align: middle;">30.5</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;">4</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">LLaMA-VID</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">44.5</td>
-                  <td style="vertical-align: middle;">14</td>
-                  <td style="vertical-align: middle;">36.5</td>
-                  <td style="vertical-align: middle;">22</td>
-                  <td style="vertical-align: middle;">33</td>
-                  <td style="vertical-align: middle;">30</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;">5</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">VideoLLaVA</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">52</td>
-                  <td style="vertical-align: middle;">5.5</td>
-                  <td style="vertical-align: middle;">36</td>
-                  <td style="vertical-align: middle;">11</td>
-                  <td style="vertical-align: middle;">34</td>
-                  <td style="vertical-align: middle;">27.7</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;">6</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">LLaVA-NeXT-Video-DPO</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">51</td>
-                  <td style="vertical-align: middle;">15</td>
-                  <td style="vertical-align: middle;">37.5</td>
-                  <td style="vertical-align: middle;">11</td>
-                  <td style="vertical-align: middle;">16</td>
-                  <td style="vertical-align: middle;">26.1</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;">7</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">VideoChat2</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">34</td>
-                  <td style="vertical-align: middle;">15</td>
-                  <td style="vertical-align: middle;">27.5</td>
-                  <td style="vertical-align: middle;">19.5</td>
-                  <td style="vertical-align: middle;">21.5</td>
-                  <td style="vertical-align: middle;">23.5</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;">8</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">VideoChatGPT</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">33.5</td>
-                  <td style="vertical-align: middle;">4.5</td>
-                  <td style="vertical-align: middle;">22.5</td>
-                  <td style="vertical-align: middle;">14</td>
-                  <td style="vertical-align: middle;">30</td>
-                  <td style="vertical-align: middle;">20.9</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;">9</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">Video-LLaMA-2</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">12</td>
-                  <td style="vertical-align: middle;">5.5</td>
-                  <td style="vertical-align: middle;">8</td>
-                  <td style="vertical-align: middle;">15.5</td>
-                  <td style="vertical-align: middle;">26</td>
-                  <td style="vertical-align: middle;">13.4</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;">10</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">VideoLaVIT</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">24</td>
-                  <td style="vertical-align: middle;">0.5</td>
-                  <td style="vertical-align: middle;">22</td>
-                  <td style="vertical-align: middle;">6</td>
-                  <td style="vertical-align: middle;">13</td>
-                  <td style="vertical-align: middle;">13</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;">11</td>
-                  <td style="text-align: left; padding: 2px 10px;"><b class="">Valley2</b></td>
-                  <td style="vertical-align: middle;">2024-05-25</td>
-                  <td style="vertical-align: middle;">10</td>
-                  <td style="vertical-align: middle;">5.5</td>
-                  <td style="vertical-align: middle;">1.5</td>
-                  <td style="vertical-align: middle;">1.5</td>
-                  <td style="vertical-align: middle;">4.5</td>
-                  <td style="vertical-align: middle;">4.6</td>
-                </tr>
-              </tbody>
-            </table>
-            
-            
-            
+        </div>
+      </div>
+    </div>
 
-            
+
+  </div>
+</section>
+
+<!-- RESULTS SECTION -->
+<section class="hero is-light is-small">
+  <div class="hero-body has-text-centered">
+    <h1 class="title is-1 mathvista">Experiment Results</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <div class="columns is-centered m-1">
+      <div class="column is-full has-text-centered content">
+        <!-- <h2 class="title is-3">Results on Existing Foundation Models</h2> -->
+        <!-- <p>One example for each reasoning skill required in <span class="mathvista">MathVista</span></p> -->
+        <div id="results-carousel" class="carousel results-carousel">
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/exps/rel.png" alt="contexts" width="100%"/>
+              <p>Correlation of Accuracy on VideoHallucer and Coverage score. We find the overall accuracy on
+                VideoHallucer correlates positively with the caption-based methods Coverage. </p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/exps/factdet.png" alt="grade-lv" width="100%"/>
+              <p>Results Comparison of Hallucination Detection and Fact Detection for Extrinsic Hallucina-
+                tion. We find existing methods are more good at fact detection than hallucination detection. </p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/exps/pep.png" alt="grade-lv" width="100%"/>
+              <p>Results of Self-explain Strategy on Extrinsic Factual Hallucination. When adding additional explaination procedure, 
+                most methods would occur less hallucination issues.
+              </p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="assets/exps/vvi.png" alt="grade-lv" width="100%"/>
+              <p>
+                Comparison between Video-langauge models and Image-language models. We highlight
+                the Top 1 model of accuracy on VideoHallucer. We find image-language models have
+                a superior performance in detecting object-relation hallucination, even though the dataset includes
+                dynamic interactions. </p>
+            </div>
+          </div>
+          
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+  </div>
+</section>
+
+
+<!-- @PAN TODO: bibtex -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3 has-text-centered">BibTeX</h2>
+    <pre><code>@article{videohallucer,
+  title={VideoHallucer: Evaluating Intrinsic and Extrinsic Hallucinations in Large Video-Language Models},
+  author={Wang, Yuxuan and Wang, Yueqian and Zhao, Dongyan and Xie, Cihang and Zheng, Zilong},
+  journal={arxiv},
+  year={2024}
+}</code></pre>
+  </div>
+</section>
+
+
+
+<footer class="footer">
+  <!-- <div class="container"> -->
+    <div class="content has-text-centered">
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is website adapted from <a href="https://mathvista.github.io/">MathVista</a>, <a href="https://video-mme.github.io/">Video-MME</a>, and <a href="https://nerfies.github.io/">Nerfies</a>, licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
           </p>
         </div>
-
-  
-        <hr>
-
-
-        
-
-       
-
-        <!-- <div class="has-text-centered content-block"> -->
-          <div class="column is-full has-text-centered content">
-          <h2 class="sub-title">Bibtex</h2>
-          <p style="text-align:justify">If you find our project useful, please consider citing us:</p>
-          <div style="padding-top: 1rem; text-align: left;">
-<pre><code>
-  @article{videohallucer,
-    title={VideoHallucer: Evaluating Intrinsic and Extrinsic Hallucinations in Large Video-Language Models},
-    author={Wang, Yuxuan and Wang, Yueqian and Zhao, Dongyan and Xie, Cihang and Zheng, Zilong},
-    journal={arxiv},
-    year={2024}
-  }
-</code></pre>
-          </div>
-        </div>
-
       </div>
-    <!-- </div> -->
+    </div>
+  <!-- </div> -->
+</footer>
 
-    <footer class="footer" style="padding: 0 0 1.5rem 0">
-      <div class="columns">
-        <div class="column" :class="[content, offset]">
-          <hr>
-          <p class="has-text-centered" style="font-size: 0.9em;">This website is designed and coded by the authors (thanks <a href="https://sqa3d.github.io/">SQA3D</a> and <a href="https://video-mme.github.io/home_page.html">Video-MME</a> for the template). Send feedback and questions to <a href="https://patrick-tssn.github.io/">Yuxuan Wang</a>.</p>
-        </div>
-      </div>
-    </footer>
-  </div>
 
-  <script>
-    // JavaScript to update the image display based on selection
-    const imageSelector = document.getElementById('imageSelector');
-    const selectedImage = document.getElementById('selectedImage');
-
-    imageSelector.addEventListener('change', function() {
-      selectedImage.src = this.value;
-      selectedImage.alt = this.options[this.selectedIndex].text;
-    });
-  </script>
 
 </body>
-
-
 </html>
